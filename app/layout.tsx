@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-
+import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,7 +19,9 @@ export default function DashboardLayout({
       <body className={inter.className}>
         {/* Layout UI */}
         {/* Place children where you want to render a page or nested layout */}
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">{children}
+          <Toaster />
+        </main>
       </body>
     </html>
   )
