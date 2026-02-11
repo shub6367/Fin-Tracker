@@ -16,6 +16,9 @@ function TradingViewWidget({ title, scriptUrl, config, className }: TradingViewW
     if (!containerRef.current) return
 
     containerRef.current.innerHTML = ''
+    const inner = document.createElement('div')
+    inner.className = 'tradingview-widget-container__widget'
+    containerRef.current.appendChild(inner)
 
     const script = document.createElement('script')
     script.src = scriptUrl || 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js'
@@ -65,7 +68,7 @@ function TradingViewWidget({ title, scriptUrl, config, className }: TradingViewW
     <div
       ref={containerRef}
       className={cn("tradingview-widget-container", className)}
-      style={{ width: '100%', height: 550 }}
+      style={{ width: '100%' }}
     />
     </div>
   )

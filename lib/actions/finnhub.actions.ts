@@ -179,3 +179,22 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
   }
 });
 
+export async function getCompanyProfile(symbol: string): Promise<any> {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) {
+      return {};
+    }
+    const sym = String(symbol || '').trim().toUpperCase();
+    if (!sym) {
+      return {};
+    }
+    const url = `${FINNHUB_BASE_URL}/stock/profile2?symbol=${encodeURIComponent(sym)}&token=${token}`;
+    const profile = await fetchJSON<any>(url, 1800);
+    return profile || {};
+  } catch (err) {
+    console.error('Error fetching company profile:', err);
+    return {};
+  }
+}
+

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { CommandDialog, CommandEmpty, CommandInput, CommandList } from "@/components/ui/command"
-import { Loader2, TrendingUp } from "lucide-react"
+import { Loader2, TrendingUp, Star } from "lucide-react"
 import Link from "next/link"
 import { useDebounce } from "@/hooks/useDebounce"
-import { Star } from "lucide-react"
+
 
 interface SearchCommandProps {
   label?: string
@@ -82,6 +82,26 @@ export default function SearchCommand({ label = 'Search', initialStocks = [] }: 
     setStocks(initialStocks);
   }
 
+  const toggleWatchlist = async (stock: StockWithWatchlistStatus) => {
+    try {
+      const isAdded = !!stock.isInWatchlist;
+      const url = isAdded ? '/api/watchlist/remove' : '/api/watchlist/add';
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol: stock.symbol, company: stock.name }),
+      });
+      if (!res.ok) throw new Error('Failed to toggle watchlist');
+      setStocks((prev) =>
+        prev.map((s) =>
+          s.symbol === stock.symbol ? { ...s, isInWatchlist: !isAdded } : s
+        )
+      );
+    } catch (e) {
+      console.error('toggleWatchlist error', e);
+    }
+  }
+
   return (
     <>
       <span onClick={() => {
@@ -130,7 +150,23 @@ export default function SearchCommand({ label = 'Search', initialStocks = [] }: 
                           {stock.symbol} | {stock.exchange} | {stock.type}
                         </div>
                     </div>
-                         <Star/>
+                    <button
+                      type="button"
+                      className={`watchlist-icon-btn ${stock.isInWatchlist ? 'watchlist-icon-added' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleWatchlist(stock);
+                      }}
+                      aria-label={stock.isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                    >
+                      <div className="watchlist-icon">
+                        <Star
+                          className="star-icon"
+                          fill={stock.isInWatchlist ? 'currentColor' : 'none'}
+                        />
+                      </div>
+                    </button>
                     </Link>
                   </li>
               ))}
