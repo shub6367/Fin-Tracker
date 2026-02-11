@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockdata</title>
+</head>
+<body>
+    <input id="symbol"placehoolder="Enter Stock Symbol"/>
+    <button id="submit">subscrbe</button>
+
+    <ul id="list"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket=io();
+        const list=document.getElementById('list');
+
+        document.getElementById('sub').onclick =() =>{
+            const s=document.getelementbyId('symbol').value.trim().toUpperCasase();
+            if(!s) return;
+            socket.emit('subscribe',s);
+            const li=document.createElement('li');
+            li.id='row-'+s;
+
+            li.textContent=`${s}: Loading...`;
+            list.appendChild(li);
+        };
+
+        socket.on('price',(p)=>{
+            const el=document.getElementById('row-'+p.symbol);
+            if(el){
+                el.textContent=`${p.symbol}: ${p.price} (as of ${new Date(p.timestamp).toLocaleTimeString()})`;
+            }
+        });
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

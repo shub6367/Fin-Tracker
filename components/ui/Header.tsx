@@ -4,7 +4,7 @@ import Image from 'next/image';
 import UserDropdown from '@/components/UserDropdown';
 import NavItems from './NavItems';
 
-const Header = () => {
+const Header = ({ user }: { user: User }) => {
   return (
     <header className="sticky top-0 bg-background z-50 border-b">
       <div className=" flex items-center justify-between w-full h-16 px-4">
@@ -27,7 +27,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center">
-         <UserDropdown />
+         <UserDropdown user={user} />
         </div>
       </div>
       

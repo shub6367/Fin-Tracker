@@ -22,12 +22,17 @@ import { COUNTRIES } from '@/lib/constants'
 
 import { DropdownProvider } from '@/contexts/DropdownContext'
 import FooterLink from '@/components/forms/FooterLink'
-
+ import {signUpWithEmail} from '@/lib/actions/auth.actions'
+ import {useRouter} from 'next/navigation'
+import { Description } from '@radix-ui/react-dialog'
+import { jsonStringifyReplacer } from 'zod/v4/core/util.cjs'
+import { toast } from 'sonner'
+import { Sign } from 'crypto'
 
 
 interface SignUpFormData {
 
-  fullName: string;
+  fullname: string;
 
   email: string;
 
@@ -47,6 +52,8 @@ interface SignUpFormData {
 
 const signUp = () => {
 
+  const router = useRouter();
+
   const {
 
     register,
@@ -65,7 +72,7 @@ const signUp = () => {
 
     defaultValues: {
 
-      fullName: '',
+      fullname: '',
 
       email: '',
 
@@ -73,9 +80,9 @@ const signUp = () => {
 
       country: '',
 
-      investmentGoals: 'Growth',
+      investmentGoals: '',
 
-      riskTolerance: 'Medium',
+      riskTolerance: '',
 
       preferredIndustry: '',
 
@@ -87,20 +94,23 @@ const signUp = () => {
 
 
 
-  const selectedCountry = watch('country');
-
-
-
   const onSubmit: SubmitHandler<SignUpFormData> = async (data: SignUpFormData) => {
-
+    console.log('onSubmit called with data:', data);
     try {
-
-      console.log(data);
-
+         console.log('Submitting sign-up data:', data);
+         const result = await signUpWithEmail(data);
+         console.log('Sign-up result:', result);
+         
+         if (result.success) {
+           console.log('Redirecting to dashboard...');
+           router.push('/');
+         }
+    
     } catch (error) {
-
-      console.error(error);
-
+      console.error('Sign-up error:', error);
+      toast.error('Sign Up failed ',{
+        description:error instanceof Error ? error.message :'failed to create account'
+      })
     }
 
   };
@@ -119,7 +129,7 @@ const signUp = () => {
 
           <InputField
 
-            name="fullName"
+            name="fullname"
 
             label="Full Name"
 
@@ -127,7 +137,7 @@ const signUp = () => {
 
             register={register}
 
-            errors={errors.fullName}
+            errors={errors.fullname}
 
             validation={{ required: 'Full name is required' }}
 
@@ -275,6 +285,19 @@ const signUp = () => {
 
             {isSubmitting ? 'Creating Account...' : 'Start your investment journey'}
 
+          </Button>
+
+          {/* Debug button */}
+          <Button 
+            type="button" 
+            onClick={() => {
+              console.log('Debug button clicked');
+              console.log('Form errors:', errors);
+              console.log('Form values:', watch());
+            }}
+            className="w-full mt-2"
+          >
+            Debug Form
           </Button>
 
           <FooterLink

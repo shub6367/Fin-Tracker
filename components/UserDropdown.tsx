@@ -8,15 +8,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { LogOut } from 'lucide-react';
 import NavItems from '@/components/ui/NavItems'
+import { signOut } from '@/lib/actions/auth.actions';
 
-const UserDropdwon = () => {
+const UserDropdwon = ({user}:{user:User}) => {
   const router: AppRouterInstance = useRouter();
 
   const handleSignOut: () => Promise<void> = async () => {
-    router.push("/sign-in");
+    await signOut();
+    router.push("/signIn");
   }
-  const user = { name: 'john', email: 'jhon@gmail.com' };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

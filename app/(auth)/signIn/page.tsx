@@ -5,6 +5,10 @@ import { SubmitHandler } from 'react-hook-form'
 import InputField from '@/components/forms/inputField'
 import { Button } from '@/components/ui/button'
 import FooterLink from '@/components/forms/FooterLink'
+import { signInWithEmail } from '@/lib/actions/auth.actions'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 
 interface SignInFormData {
@@ -16,6 +20,7 @@ interface SignInFormData {
 
 }
 const signIn = () => {
+  const router = useRouter();
 
 
 
@@ -51,19 +56,22 @@ const signIn = () => {
   });
 
   const onSubmit: SubmitHandler<SignInFormData> = async (data: SignInFormData) => {
-
     try {
-
-      console.log(data);
-
+      console.log('Submitting sign-in data:', data);
+      const result = await signInWithEmail(data);
+      console.log('Sign-in result:', result);
+      
+      if (result.success) {
+        console.log('Redirecting to dashboard...');
+        router.push('/');
+      }
     } catch (error) {
-
-      console.error(error);
-
+      console.error('Sign-in error:', error);
+      toast.error('Sign In failed', {
+        description: error instanceof Error ? error.message : 'Failed to sign in',
+      });
     }
-
   };
-
 
 
 

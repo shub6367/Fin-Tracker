@@ -195,7 +195,7 @@
     @apply text-gray-400 font-medium hover:text-yellow-400 hover:underline transition-colors;
   }
   .search-text {
-    @apply cursor-pointer hover:text-yellow-500;
+    @apply cursor-pointer hover:text-yellow-500 text-gray-100;
   }
   .search-btn {
     @apply cursor-pointer px-4 py-2 w-fit flex items-center gap-2 text-sm md:text-base bg-yellow-500 hover:bg-yellow-500 text-black font-medium rounded;
