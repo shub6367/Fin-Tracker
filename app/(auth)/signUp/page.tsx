@@ -287,18 +287,8 @@ const signUp = () => {
 
           </Button>
 
-          {/* Debug button */}
-          <Button 
-            type="button" 
-            onClick={() => {
-              console.log('Debug button clicked');
-              console.log('Form errors:', errors);
-              console.log('Form values:', watch());
-            }}
-            className="w-full mt-2"
-          >
-            Debug Form
-          </Button>
+          
+       
 
           <FooterLink
             text="Already have an account?"
